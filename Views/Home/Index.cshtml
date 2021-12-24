@@ -1,0 +1,89 @@
+﻿@model IEnumerable<cinema.Models.Display>
+
+<div>
+  <p class="cinema-title">Cinema <i class="fas fa-video color-green"></i></p>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-light border mb-3 ">
+  <button class="navbar-toggler " type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon color-green"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto ">
+      <li class="nav-item  active">
+
+        <a class="nav-link navbar-text-font mr-5"><i class="fas fa-calendar-alt"></i>
+          @Model.FirstOrDefault().Time.ToString("dddd, dd MMMM yyyy") <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active dropdown">
+        <a class="nav-link dropdown-toggle navbar-text-font " data-bs-toggle="collapse" href="#collapse" role="button"
+          aria-expanded="false" aria-controls="collapse">
+          Sort movies
+        </a>
+        <div class="collapse" id="collapse">
+          <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="title_asc">Movie title <i
+              class="fas fa-sort-amount-up"></i></a>
+          <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="title_desc">Movie title <i
+              class="fas fa-sort-amount-down-alt"></i></a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="starts_asc">Time <i
+              class="fas fa-sort-amount-up"></i></a>
+          <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="starts_desc">Time <i
+              class="fas fa-sort-amount-down-alt"></i></a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="seats_asc">Free seats <i
+              class="fas fa-sort-amount-up"></i></a>
+          <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="seats_desc">Free seats <i
+              class="fas fa-sort-amount-down-alt"></i></a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="salon_asc">Hall name <i
+              class="fas fa-sort-amount-up"></i></a>
+          <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="salon_desc">Hall name <i
+              class="fas fa-sort-amount-down-alt"></i></a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container  p-0 m-0">
+
+
+  @foreach (var item in Model)
+  {
+    <div class="card-deck mb-lg-4">
+      <div class="card ">
+        <div class="card-header  @*bg-dark*@ ">
+          <h2 class="card-title"><i class="fa fa-film color-gold" aria-hidden="true"></i> @item.Movie.Title</h2>
+        </div>
+        <div class="card-body">
+          <h5 class="card-text">
+            <i class="fas fa-clock color-gold"></i>
+            @item.Time.ToString("HH:mm")
+          </h5>
+
+          <h5 class="card-text">
+            <i class="fas fa-door-open color-gold"></i>
+            @item.Salon.Name
+          </h5>
+          <h5 class="card-text ">
+            <i class="fas fa-couch color-gold"></i>
+            @(item.Salon.Seats-item.TotalTicketsSold) seats left of @item.Salon.Seats
+          </h5>
+          <div>
+            @if ((item.Salon.Seats - item.TotalTicketsSold) == 0)
+            {
+              <button type="button" class="btn btn-danger btn-lg  " disabled>Fully booked</button>
+            }
+            else
+            {
+              <a asp-controller="Booking" asp-action="Show" asp-route-id="@item.Id" class="btn my-button btn-lg ">Book</a>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
